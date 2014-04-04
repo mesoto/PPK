@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PPK", "PPK.vcproj", "{88634EA6-CC51-42B0-94F2-8C2FBE48817A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5995E359-C52B-42E6-80E4-F6B8998BD9AE} = {5995E359-C52B-42E6-80E4-F6B8998BD9AE}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CryptoLib", "CryptoLib\CryptoLib.vcproj", "{5995E359-C52B-42E6-80E4-F6B8998BD9AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88634EA6-CC51-42B0-94F2-8C2FBE48817A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{88634EA6-CC51-42B0-94F2-8C2FBE48817A}.Debug|Win32.Build.0 = Debug|Win32
+		{88634EA6-CC51-42B0-94F2-8C2FBE48817A}.Release|Win32.ActiveCfg = Release|Win32
+		{88634EA6-CC51-42B0-94F2-8C2FBE48817A}.Release|Win32.Build.0 = Release|Win32
+		{5995E359-C52B-42E6-80E4-F6B8998BD9AE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5995E359-C52B-42E6-80E4-F6B8998BD9AE}.Debug|Win32.Build.0 = Debug|Win32
+		{5995E359-C52B-42E6-80E4-F6B8998BD9AE}.Release|Win32.ActiveCfg = Release|Win32
+		{5995E359-C52B-42E6-80E4-F6B8998BD9AE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

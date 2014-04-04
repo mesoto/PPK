@@ -1,0 +1,354 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_PPK                 ICON                    "resource\\mainicon.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 22, 17, 206, 119
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_CAPTION | WS_SYSMENU
+CAPTION "About PPK"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    ICON            IDI_PPK,IDC_MYICON,14,9,20,20
+    LTEXT           "PPK Version 1.0.1",IDC_STATIC,44,9,95,9,SS_NOPREFIX
+    DEFPUSHBUTTON   "OK",IDOK,79,102,43,12,WS_GROUP
+    LTEXT           "Copyright © 2009 Mehdi Sotoodeh.",IDC_STATIC,44,20,130,11
+    GROUPBOX        "The creepy stuff",IDC_STATIC,7,32,129,60
+    LTEXT           "Public Key: ECC K163\nKey Exchange: ECKAS-DH1\nEncryption: AES-128\nHash: SHA-1",IDC_STATIC,19,47,97,39
+    CONTROL         149,IDC_STATIC,"Static",SS_BITMAP | WS_BORDER,141,34,55,80
+END
+
+IDD_GET_PASSWORD DIALOGEX 0, 0, 231, 110
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Enter Password"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,116,78,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,53,78,50,14
+    EDITTEXT        IDC_PASSWORD,9,60,203,12,ES_PASSWORD | ES_AUTOHSCROLL | NOT WS_TABSTOP
+    LTEXT           "Enter the password associated with public key:",IDC_PSW_PROMPT,9,7,182,9
+    CONTROL         "",IDC_EXP_PUBKEY,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,9,17,203,10
+    LTEXT           "Identifier:",IDC_STATIC,9,30,182,9
+    CONTROL         "",IDC_EXP_KEYID,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,9,41,203,10
+END
+
+IDD_GENERATE_KEY DIALOGEX 0, 0, 266, 132
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Generate New Key Pair"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    GROUPBOX        "Your password",IDC_STATIC,7,7,183,72
+    LTEXT           "Enter a hard to guess password here.\nYour private key will be derived from this password.",IDC_STATIC,11,16,172,16
+    EDITTEXT        IDC_PASSWORD,11,33,171,12,ES_PASSWORD
+    LTEXT           "Retype password",IDC_STATIC,14,45,113,8
+    EDITTEXT        IDC_PASSWORD2,11,53,171,12,ES_PASSWORD
+    CONTROL         "Allow weak password",IDC_ALLOW_WEAK,"Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,14,66,89,11
+    GROUPBOX        "Your key identifier",IDC_STATIC,7,82,183,36
+    LTEXT           "Define a friendly name for your public key.",IDC_STATIC,14,90,170,8
+    EDITTEXT        IDC_KEY_ID,9,100,171,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,204,14,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,203,29,50,14
+END
+
+IDD_SHOW_KEY_INFO DIALOGEX 0, 0, 343, 75
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Your Public Key"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_KEY_ID,7,7,329,13,ES_AUTOHSCROLL | ES_READONLY
+    CONTROL         "&Add it to the list",IDC_ADD_TO_LIST,"Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,14,56,139,12
+    LTEXT           "You may share this public key with others.\nKeep the password associated with this key somewhere safe.",IDC_STATIC,14,28,236,22,SS_SUNKEN
+    DEFPUSHBUTTON   "OK",IDOK,262,25,74,16
+    PUSHBUTTON      "Copy to clipboard",IDC_CLIP_COPY,262,48,74,16
+END
+
+IDD_FILE_ENCRYPT DIALOGEX 0, 0, 385, 222
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_ACCEPTFILES
+CAPTION "Encrypt File"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    GROUPBOX        "File to encrypt",IDC_STATIC,7,7,315,40
+    EDITTEXT        IDC_FILE_NAME,14,18,278,12,ES_AUTOHSCROLL,WS_EX_ACCEPTFILES
+    PUSHBUTTON      "...",IDC_BROWSE_INPUT,297,18,19,13
+    CONTROL         "&Delete input file after encryption",IDC_DELETE_INPUT,
+                    "Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,14,32,160,9
+    GROUPBOX        "Output file or folder",IDC_STATIC,7,52,315,40
+    EDITTEXT        IDC_OUTPUT,14,63,278,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_OUTPUT,298,63,20,13
+    CONTROL         "&Overwrite if exist",IDC_OVERWRITE,"Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,14,79,122,9
+    GROUPBOX        "Public key to use:",IDC_STATIC,7,100,315,30
+    COMBOBOX        IDC_PUB_KEY_COMBO,14,112,304,93,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Status",IDC_STATIC,7,136,316,76
+    CONTROL         "",IDC_PROGRESS_BAR,"msctls_progress32",WS_BORDER | 0x1,15,151,301,6
+    DEFPUSHBUTTON   "&Encrypt",IDOK,329,7,50,18
+    PUSHBUTTON      "&Close",IDCANCEL,329,31,50,18
+    LISTBOX         IDC_STATUS,14,164,304,41,NOT LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | LBS_NOSEL | WS_VSCROLL | WS_HSCROLL
+END
+
+IDD_MAIN DIALOGEX 100, 50, 430, 234
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_ACCEPTFILES
+CAPTION "PPK: Password as Private Key"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "PPK Version 1.0.2. Created 2009 by Mehdi Sotoodeh.",IDC_STATIC,5,216,313,8
+    CONTROL         145,IDC_STATIC,"Static",SS_BITMAP | SS_SUNKEN | WS_BORDER,5,7,418,98
+    GROUPBOX        "File operations",IDC_STATIC,5,106,315,64
+    PUSHBUTTON      "&Encrypt",IDC_ENCRYPT,14,117,62,21
+    LTEXT           " Encode a file using someone's public key.\n The encoded file can be decoded only by the owner of that public key.",IDC_STATIC,81,117,234,21,SS_SUNKEN
+    PUSHBUTTON      "&Decrypt",IDC_DECRYPT,14,143,62,21
+    LTEXT           " Decode a file encoded by your public key.\n Your password is needed for this operation.",IDC_STATIC,81,143,234,21,SS_SUNKEN
+    GROUPBOX        "Key operations",IDC_STATIC,5,173,315,38
+    PUSHBUTTON      "Manage &Keys",IDC_MANAGE_KEYS,14,184,62,21
+    LTEXT           " Add, Remove or Generate keys.\n Keys will be stored in a local file.",IDC_STATIC,81,185,234,21,SS_SUNKEN
+    DEFPUSHBUTTON   "E&xit",IDCANCEL,354,194,50,14
+END
+
+IDD_FILE_DECRYPT DIALOGEX 0, 0, 384, 193
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_ACCEPTFILES
+CAPTION "Decrypt File"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "File to decrypt",IDC_STATIC,7,7,317,42
+    EDITTEXT        IDC_FILE_NAME,15,17,278,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_INPUT,296,16,20,13
+    CONTROL         "&Delete after decryption",IDC_DELETE_INPUT,"Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,17,34,133,11
+    GROUPBOX        "Output file or folder",IDC_STATIC,7,56,317,43
+    EDITTEXT        IDC_OUTPUT,16,67,278,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_OUTPUT,298,67,20,13
+    CONTROL         "&Overwrite if exists",IDC_OVERWRITE,"Button",BS_AUTOCHECKBOX | BS_FLAT | WS_TABSTOP,16,84,133,11
+    GROUPBOX        "Status",IDC_STATIC,7,110,316,76
+    CONTROL         "",IDC_PROGRESS_BAR,"msctls_progress32",WS_BORDER | 0x1,15,124,301,6
+    LISTBOX         IDC_STATUS,14,135,304,41,NOT LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | LBS_NOSEL | WS_VSCROLL | WS_HSCROLL
+    DEFPUSHBUTTON   "Decrypt",IDOK,327,7,50,14
+    PUSHBUTTON      "Close",IDCANCEL,327,25,50,14
+END
+
+IDD_MANAGE_KEYS DIALOGEX 0, 0, 358, 179
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Manage Keys"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Enter or paste a public key here:",IDC_STATIC,9,7,157,10
+    EDITTEXT        IDC_PUB_KEY,7,17,290,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&Add",IDC_IMPORT,305,16,46,14
+    LISTBOX         IDC_KEY_LIST,7,55,290,117,NOT LBS_NOTIFY | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&Remove",IDC_REMOVE,305,52,46,13
+    PUSHBUTTON      "&New Key",IDC_GEN_KEY,304,34,47,13
+    PUSHBUTTON      "OK",IDOK,305,142,46,14
+    PUSHBUTTON      "Cancel",IDCANCEL,305,158,46,14
+    LTEXT           " Tag  Public Key",IDC_STATIC,7,46,107,8
+    LTEXT           "Identifier",IDC_STATIC,186,45,72,8
+    GROUPBOX        "Loaded keys",IDC_STATIC,7,36,290,136
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        RIGHTMARGIN, 203
+        BOTTOMMARGIN, 117
+    END
+
+    IDD_GET_PASSWORD, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 225
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_GENERATE_KEY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 261
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 125
+    END
+
+    IDD_SHOW_KEY_INFO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 336
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 70
+    END
+
+    IDD_FILE_ENCRYPT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 379
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 214
+    END
+
+    IDD_MAIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 5
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 229
+    END
+
+    IDD_FILE_DECRYPT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 377
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 186
+    END
+
+    IDD_MANAGE_KEYS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 351
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 172
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "FileDescription", "Password as Private Key"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "PPK"
+            VALUE "LegalCopyright", "Copyright (C) 2009"
+            VALUE "OriginalFilename", "PPK.exe"
+            VALUE "ProductName", "PPK Application"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_MAIN                BITMAP                  "resource\\title.bmp"
+IDB_GRAMPA              BITMAP                  "resource\\grampa.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_APP_TITLE           "PPK - Password as Private Key"
+    IDS_INITIAL_KEY         "{SR5SHDCTAGJLZSW935FKUAD90BUSRX75P794/mehdisotoodeh@gmail.com}"
+    IDC_PPK                 "PPK"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
