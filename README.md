@@ -3,7 +3,20 @@ Password as Private Key
 
 PPK Version 1.x Copyright (c) 2009 Mehdi Sotoodeh. All rights reserved. 
 
-See docs/PPKGuide.pdf
+PPK (Password as Private Key) is a lightweight file encryption tool.
+It utilizes K-163 ECC public key for key exchange and 128-bit AES as
+the data encryption algorithm.
+PPK derives the private key from your password and then uses it to
+calculates the associated public key. 
+The public key is presented in base-32 as a short string:
+
+    {TK90W3ML8HPZFE9ASK1SFYL9EBUSC2WG06KW/john}
+    {HBLYZLE4ZMK8KHSLPFKR5C9FL75S5G12Z6HR/mike}
+
+Using PPK, you can use someone's public key to encrypt a file. The
+person who knows the associated passord is able to decrypt this file.
+See PPKGuide.pdf for more info.
+
 
 IMPORTANT: You MUST read and accept attached license agreement before using PPK.
 
