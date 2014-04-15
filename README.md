@@ -36,11 +36,11 @@ RISK OF USING THIS SOFTWARE.
 FILES IN THIS RELEASE
 ---------------------
 
-PPK.exe         The main application program.
-PPKGuide.pdf    User's guide.
-PPK.reg         Registry file to associate .ppk files with PPK.
-license.txt     License agreement file.
-readme.txt      This readme file.
+    PPK.exe         The main application program.
+    PPKGuide.pdf    User's guide.
+    PPK.reg         Registry file to associate .ppk files with PPK.
+    license.txt     License agreement file.
+    readme.txt      This readme file.
 
 COMMAND LINE
 ------------
