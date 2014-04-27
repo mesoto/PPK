@@ -285,19 +285,6 @@ void AES128_LoadKey(
     }
 }
 
-void AES128_EncryptXor(
-    PAES128_CONTEXT ac,
-    unsigned char * data,
-    unsigned char * feedback )
-{
-    ((unsigned long *)data)[0] ^= ((unsigned long *)feedback)[0];
-    ((unsigned long *)data)[1] ^= ((unsigned long *)feedback)[1];
-    ((unsigned long *)data)[2] ^= ((unsigned long *)feedback)[2];
-    ((unsigned long *)data)[3] ^= ((unsigned long *)feedback)[3];
-
-    AES128_Encrypt( ac, data );
-}
-
 void AES128_Encrypt(
     PAES128_CONTEXT ac,
     unsigned char * data )

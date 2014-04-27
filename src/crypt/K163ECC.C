@@ -73,8 +73,7 @@ unsigned char K163_BasePointOrder[K163_FIELD_BYTES] =
      4,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02,
        0x01,0x08,0xA2,0xE0,0xCC,0x0D,0x99,0xF8,0xA5,0xEF
 };
-extern K163_DIGIT K163_BPO[];
-extern K163_DIGIT K163_BPO_R2[];
+
 int K163_Add( K163_DIGIT * z, K163_DIGIT * x, K163_DIGIT * y, int digits );
 int K163_Sub( K163_DIGIT * z, K163_DIGIT * x, K163_DIGIT * y, int digits );
 void K163_MontMul( K163_DIGIT * z, K163_DIGIT * x, K163_DIGIT * y );
@@ -551,107 +550,6 @@ unsigned long f2n_add( PF2N z, PF2N x, PF2N y )
     return c;
 }
 
-int K163_ECDSAVerify(
-    unsigned char    * MsgDigest, 
-    PK163_POINT        PubKey,
-    PK163_SIGNATURE    Sig )
-{
-    unsigned char u1[21], u2[21];
-    F2N_POINT P1, P2, P3;
-    K163_DIGIT w[K163_DIGITS], z[K163_DIGITS], t[K163_DIGITS];
-
-    // w = 1/s               (mod BPO)
-    // u1 = msg*w, u2 = r*w  (mod BPO)
-    // v = X(u1.P + u2.Q)    (mod BPO)
-    // return (v == r)? 1 : 0
-
-    // Calculate w = R/s mod BPO
-    K163_BytesToDigits( Sig->S, t );
-    K163_MontInv( w, t );
-
-    // m is 20 bytes (SHA1 digest)
-    t[5] = 0;
-    t[4] = GetMSBF32(MsgDigest+0);
-    t[3] = GetMSBF32(MsgDigest+4);
-    t[2] = GetMSBF32(MsgDigest+8);
-    t[1] = GetMSBF32(MsgDigest+12);
-    t[0] = GetMSBF32(MsgDigest+16);
-
-    K163_MontMul( z, t, w );    // u1 = m.(R/s)/R = m/s mod BPO
-    K163_DigitsToBytes( z, u1 );
-
-    K163_BytesToDigits( Sig->R, t ); // u2 = r.(R/s)/R = r/s mod BPO
-    K163_MontMul( z, t, w );    
-    K163_DigitsToBytes( z, u2 );
-
-    K163_ByteArrayToField( PubKey->X, &P3.x );
-    K163_ByteArrayToField( PubKey->Y, &P3.y );
-
-    point_multiply( &P1, u1, 21, &base_point );
-    point_multiply( &P2, u2, 21, &P3 );
-
-    // Calculate P3 = P1+P2
-    K163_PointAdd( &P3, &P1, &P2 );
-
-    // Calculate P3.x mod BPO
-    if( f2n_sub( &P1.x, &P3.x, &base_point_order ))
-        K163_FieldToByteArray( &P3.x, u1 );
-    else
-        K163_FieldToByteArray( &P1.x, u1 );
-
-    return (memcmp( u1, Sig->R, sizeof(Sig->R) ) == 0)? 1 : 0;
-}
-
-int K163_ECSSHVerify(
-    unsigned char    * MsgDigest, 
-    PK163_POINT        PubKey,
-    PK163_SIGNATURE    Sig )
-{
-    F2N u;
-    unsigned char t[21];
-    F2N_POINT P1, P2, P3;
-
-    // v = X(s.P + r.Q) + h(m)    (mod BPO)
-    // return (v == r)? 1 : 0
-
-    K163_ByteArrayToField( PubKey->X, &P3.x );
-    K163_ByteArrayToField( PubKey->Y, &P3.y );
-
-    point_multiply( &P1, Sig->S, 21, &base_point );
-    point_multiply( &P2, Sig->R, 21, &P3 );
-
-    // Calculate P3 = P1+P2
-    K163_PointAdd( &P3, &P1, &P2 );
-
-    // m is 20 bytes (SHA1 digest)
-    u.e[0] = 0;
-    u.e[1] = GetMSBF32(MsgDigest+0);
-    u.e[2] = GetMSBF32(MsgDigest+4);
-    u.e[3] = GetMSBF32(MsgDigest+8);
-    u.e[4] = GetMSBF32(MsgDigest+12);
-    u.e[5] = GetMSBF32(MsgDigest+16);
-
-    f2n_add( &u, &P3.x, &u );
-
-    // Calculate u mod BPO
-    if( f2n_sub( &P1.x, &u, &base_point_order ))
-        K163_FieldToByteArray( &u, t );
-    else
-    {
-        if( f2n_sub( &P1.y, &P1.x, &base_point_order ))
-            K163_FieldToByteArray( &P1.x, t );
-        else
-        {
-            if( f2n_sub( &P1.x, &P1.y, &base_point_order ))
-                K163_FieldToByteArray( &P1.y, t );
-            else
-                K163_FieldToByteArray( &P1.x, t );
-        }
-    }
-
-    return (memcmp( t, Sig->R, sizeof(Sig->R) ) == 0) ? 1 : 0;
-}
-
 void K163_PointAdd( PF2N_POINT p3, PF2N_POINT p1, PF2N_POINT p2 )
 {
     F2N x1, t1, t2, t3;
@@ -681,20 +579,9 @@ void K163_F2NZero( PF2N a )
     a->e[0] = a->e[1] = a->e[2] = a->e[3] = a->e[4] = a->e[5] = 0;
 }
 
-//Peter Cheng
-unsigned long MyCheckZero(void * dest,unsigned long length)
+int K163_IsF2NZero( PF2N a )
 {
-    unsigned long    i;
-    for (i = 0; i < length; i++)
-    {
-        if(*((unsigned char*)dest+i) != 0 )
-        {
-            break;
-        }
-    }
-    if(i == length) { return 0; }
-    else    { return 1; }
-
+    return ((a->e[0] | a->e[1] | a->e[2] | a->e[3] | a->e[4] | a->e[5]) == 0) ? 1 : 0;
 }
 
 /*
@@ -736,12 +623,7 @@ void K163_PolyInv( PF2N r, PF2N a )
             {
                 t1 = v;
                 t2 = c;
-                //Peter Cheng
-                if(MyCheckZero(&t1,sizeof(t1)) == 0)
-                {
-                    break;
-                }
-                if(MyCheckZero(&t2,sizeof(t2)) == 0)
+                if( K163_IsF2NZero( &t1 ) || K163_IsF2NZero( &t2 ))
                 {
                     break;
                 }
@@ -764,12 +646,7 @@ void K163_PolyInv( PF2N r, PF2N a )
                 // deg(u) < deg(v), swap the two
                 t1 = u; u = v; v = t1;
                 t2 = b; b = c; c = t2;
-                //Peter Cheng
-                if(MyCheckZero(&t1,sizeof(t1)) == 0)
-                {
-                    break;
-                }
-                if(MyCheckZero(&t2,sizeof(t2)) == 0)
+                if( K163_IsF2NZero( &t1 ) || K163_IsF2NZero( &t2 ))
                 {
                     break;
                 }
@@ -796,6 +673,7 @@ end:
     *r = b;
 }
 
+#ifdef INCL_K163_SIGN
 void K163_SSHSignature( 
     unsigned char  * d,         // [in] Private key, 21 bytes
     unsigned char  * m,         // [in] h(m), 20 bytes
@@ -935,3 +813,104 @@ void K163_DSASignature(
     K163_DigitsToBytes( w, Sig->S );
 }
 
+int K163_ECDSAVerify(
+    unsigned char    * MsgDigest, 
+    PK163_POINT        PubKey,
+    PK163_SIGNATURE    Sig )
+{
+    unsigned char u1[21], u2[21];
+    F2N_POINT P1, P2, P3;
+    K163_DIGIT w[K163_DIGITS], z[K163_DIGITS], t[K163_DIGITS];
+
+    // w = 1/s               (mod BPO)
+    // u1 = msg*w, u2 = r*w  (mod BPO)
+    // v = X(u1.P + u2.Q)    (mod BPO)
+    // return (v == r)? 1 : 0
+
+    // Calculate w = R/s mod BPO
+    K163_BytesToDigits( Sig->S, t );
+    K163_MontInv( w, t );
+
+    // m is 20 bytes (SHA1 digest)
+    t[5] = 0;
+    t[4] = GetMSBF32(MsgDigest+0);
+    t[3] = GetMSBF32(MsgDigest+4);
+    t[2] = GetMSBF32(MsgDigest+8);
+    t[1] = GetMSBF32(MsgDigest+12);
+    t[0] = GetMSBF32(MsgDigest+16);
+
+    K163_MontMul( z, t, w );    // u1 = m.(R/s)/R = m/s mod BPO
+    K163_DigitsToBytes( z, u1 );
+
+    K163_BytesToDigits( Sig->R, t ); // u2 = r.(R/s)/R = r/s mod BPO
+    K163_MontMul( z, t, w );    
+    K163_DigitsToBytes( z, u2 );
+
+    K163_ByteArrayToField( PubKey->X, &P3.x );
+    K163_ByteArrayToField( PubKey->Y, &P3.y );
+
+    point_multiply( &P1, u1, 21, &base_point );
+    point_multiply( &P2, u2, 21, &P3 );
+
+    // Calculate P3 = P1+P2
+    K163_PointAdd( &P3, &P1, &P2 );
+
+    // Calculate P3.x mod BPO
+    if( f2n_sub( &P1.x, &P3.x, &base_point_order ))
+        K163_FieldToByteArray( &P3.x, u1 );
+    else
+        K163_FieldToByteArray( &P1.x, u1 );
+
+    return (memcmp( u1, Sig->R, sizeof(Sig->R) ) == 0)? 1 : 0;
+}
+
+int K163_ECSSHVerify(
+    unsigned char    * MsgDigest, 
+    PK163_POINT        PubKey,
+    PK163_SIGNATURE    Sig )
+{
+    F2N u;
+    unsigned char t[21];
+    F2N_POINT P1, P2, P3;
+
+    // v = X(s.P + r.Q) + h(m)    (mod BPO)
+    // return (v == r)? 1 : 0
+
+    K163_ByteArrayToField( PubKey->X, &P3.x );
+    K163_ByteArrayToField( PubKey->Y, &P3.y );
+
+    point_multiply( &P1, Sig->S, 21, &base_point );
+    point_multiply( &P2, Sig->R, 21, &P3 );
+
+    // Calculate P3 = P1+P2
+    K163_PointAdd( &P3, &P1, &P2 );
+
+    // m is 20 bytes (SHA1 digest)
+    u.e[0] = 0;
+    u.e[1] = GetMSBF32(MsgDigest+0);
+    u.e[2] = GetMSBF32(MsgDigest+4);
+    u.e[3] = GetMSBF32(MsgDigest+8);
+    u.e[4] = GetMSBF32(MsgDigest+12);
+    u.e[5] = GetMSBF32(MsgDigest+16);
+
+    f2n_add( &u, &P3.x, &u );
+
+    // Calculate u mod BPO
+    if( f2n_sub( &P1.x, &u, &base_point_order ))
+        K163_FieldToByteArray( &u, t );
+    else
+    {
+        if( f2n_sub( &P1.y, &P1.x, &base_point_order ))
+            K163_FieldToByteArray( &P1.x, t );
+        else
+        {
+            if( f2n_sub( &P1.x, &P1.y, &base_point_order ))
+                K163_FieldToByteArray( &P1.y, t );
+            else
+                K163_FieldToByteArray( &P1.x, t );
+        }
+    }
+
+    return (memcmp( t, Sig->R, sizeof(Sig->R) ) == 0) ? 1 : 0;
+}
+#endif
